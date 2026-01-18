@@ -1,0 +1,108 @@
+@model SchemaTemplaceWeb.Models.ProcedureInputViewModel
+@{
+    ViewData["Title"] = "Procedure Parameters";
+}
+
+<style>
+    body {
+        background-color: #121212;
+        color: #e0e0e0;
+    }
+    .card {
+        background-color: #1e1e1e;
+        border: 1px solid #333;
+        border-radius: 0.5rem;
+    }
+    .form-control {
+        background-color: #2d2d2d;
+        border: 1px solid #444;
+        color: #fff;
+    }
+    .form-control:focus {
+        background-color: #2d2d2d;
+        color: #fff;
+        border-color: #9c27b0;
+        box-shadow: 0 0 0 0.25rem rgba(156, 39, 176, 0.25);
+    }
+    .form-control::placeholder {
+        color: #6c757d;
+    }
+    .btn-custom-purple {
+        background-color: #9c88cc;
+        border-color: #9c88cc;
+        color: #000;
+        font-weight: 500;
+    }
+    .btn-custom-purple:hover {
+        background-color: #8571b8;
+        border-color: #8571b8;
+        color: #000;
+    }
+    .btn-custom-clear {
+        background-color: #e0e0e0;
+        border-color: #e0e0e0;
+        color: #000;
+        font-weight: 500;
+    }
+    .btn-custom-clear:hover {
+        background-color: #d6d6d6;
+        border-color: #d6d6d6;
+        color: #000;
+    }
+    .text-instruction-muted {
+        color: #888;
+        font-style: italic;
+    }
+    label {
+        font-weight: 500;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card p-4 shadow-lg">
+                <h2 class="mb-2">Enter Parameters</h2>
+                <p class="text-instruction-muted mb-4">Procedure: <strong>@Model.ProcedureName</strong></p>
+
+                <form method="post" action="@Url.Action("Execute", "Procedure")">
+                    <!-- Hidden field to pass the procedure name -->
+                    <input type="hidden" name="ProcedureName" value="@Model.ProcedureName" />
+
+                    @if (Model.Parameters != null && Model.Parameters.Count > 0)
+                    {
+                        <div class="vstack gap-3">
+                            @foreach (var param in Model.Parameters)
+                            {
+                                <div class="row align-items-center">
+                                    <label for="@param.Name" class="col-sm-4 col-form-label text-end">@param.Name</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="@param.Name" 
+                                               name="@param.Name" 
+                                               value="@(param.HasDefaultValue ? param.DefaultValue : "")"
+                                               placeholder="@param.DataType">
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info text-dark" role="alert">
+                            No parameters required for this procedure. Please click Submit to proceed.
+                        </div>
+                    }
+
+                    <hr class="border-secondary my-4">
+
+                    <div class="d-flex justify-content-end gap-3">
+                        <button type="reset" class="btn btn-custom-clear px-4">Clear Data</button>
+                        <button type="submit" class="btn btn-custom-purple px-4">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

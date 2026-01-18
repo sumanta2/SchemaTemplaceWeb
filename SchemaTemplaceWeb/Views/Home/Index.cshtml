@@ -1,0 +1,108 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<style>
+    body {
+        background-color: #121212;
+        color: #e0e0e0;
+    }
+    .card {
+        background-color: #1e1e1e;
+        border: 1px solid #333;
+    }
+    .form-control {
+        background-color: #2d2d2d;
+        border: 1px solid #444;
+        color: #fff;
+    }
+    .form-control:focus {
+        background-color: #2d2d2d;
+        color: #fff;
+        border-color: #9c27b0;
+        box-shadow: 0 0 0 0.25rem rgba(156, 39, 176, 0.25);
+    }
+    .form-control::placeholder {
+        color: #6c757d;
+    }
+    .btn-custom-purple {
+        background-color: #9c88cc;
+        border-color: #9c88cc;
+        color: #000;
+        font-weight: 500;
+    }
+    .btn-custom-purple:hover {
+        background-color: #8571b8;
+        border-color: #8571b8;
+        color: #000;
+    }
+    .btn-custom-clear {
+        background-color: #e0e0e0;
+        border-color: #e0e0e0;
+        color: #000;
+        font-weight: 500;
+    }
+    .btn-custom-clear:hover {
+        background-color: #d6d6d6;
+        border-color: #d6d6d6;
+        color: #000;
+    }
+    .text-instruction-muted {
+        color: #888;
+        font-style: italic;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Instructions Column -->
+        <div class="col-md-6 mb-4">
+            <h2 class="mb-4">Instructions</h2>
+            <ol class="list-unstyled">
+                <li class="mb-3">1. Ensure you are logged in to AXIS before proceeding.</li>
+                <li class="mb-3">
+                    2. Enter the stored procedure in the following format:
+                    <div class="mt-1 text-instruction-muted">Database.Schema.ProcedureName</div>
+                </li>
+                <li class="mb-3">
+                    3. If the stored procedure does not require any parameters,
+                    <div class="mt-1">Do not check in the Checkbox.</div>
+                </li>
+                <li class="mb-3">4. Click 'Generate Excel' to create the Excel file.</li>
+                <li class="mb-3">5. The Excel file will be saved automatically on your Desktop.</li>
+            </ol>
+        </div>
+
+        <!-- Form Column -->
+        <div class="col-md-6">
+            <h2 class="mb-4">Template Generator</h2>
+            <form method="post">
+                @if (ViewBag.Message != null)
+                {
+                    <div class="alert alert-success" role="alert">
+                        @ViewBag.Message
+                    </div>
+                }
+
+                <div class="mb-4">
+                    <input type="text" 
+                           class="form-control form-control-lg" 
+                           id="inputString" 
+                           name="procedureName"
+                           placeholder="BD_APP_DB.dbo.Procedure_name" 
+                           required>
+                </div>
+
+                <div class="mb-4 form-check">
+                    <input type="checkbox" class="form-check-input" id="useDefaultParam" name="useDefaultParam">
+                    <label class="form-check-label" for="useDefaultParam">Use default Parameter : user_id</label>
+                </div>
+
+                <div class="d-grid gap-3">
+                    <button type="submit" class="btn btn-custom-purple btn-lg rounded-3">Generate Excel</button>
+                    <button type="reset" class="btn btn-custom-clear btn-lg rounded-3">Clear</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
