@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using SchemaTemplateLib.Interfaces;
-using System.Collections.Generic;
 
 namespace SchemaTemplaceWeb.Controllers
 {

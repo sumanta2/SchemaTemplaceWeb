@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SchemaTemplaceWeb.Models;
+using SchemaTemplateLib.DataModel;
 using SchemaTemplateLib.Interfaces;
 using System.Diagnostics;
 
@@ -22,8 +23,8 @@ namespace SchemaTemplaceWeb.Controllers
         [HttpPost]
         public IActionResult Index(string procedureName)
         {
-            // Fetch validation parameters for the procedure
-            var parameters = _exposeMethdos.GetProcedureParams(procedureName);
+			// Fetch validation parameters for the procedure
+			List<ProcedureParam> parameters = _exposeMethdos.GetProcedureParams(procedureName);
 
             // If no parameters are required, generate the Excel directly
             if (parameters == null || parameters.Count == 0)
