@@ -43,6 +43,13 @@ namespace SchemaTemplaceWeb.Controllers
             return View("ProcedureInputs", model);
         }
 
+        [HttpGet]
+        public JsonResult SearchProcedures(string term)
+        {
+            var procedures = _exposeMethdos.SearchProcedures(term);
+            return Json(procedures);
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

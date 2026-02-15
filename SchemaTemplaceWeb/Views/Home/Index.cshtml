@@ -51,6 +51,41 @@
         color: #888;
         font-style: italic;
     }
+    .text-instruction-muted {
+        color: #888;
+        font-style: italic;
+    }
+    
+    /* Autocomplete styles */
+    .autocomplete-items {
+        position: absolute;
+        border: 1px solid #444;
+        border-bottom: none;
+        border-top: none;
+        z-index: 99;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: #2d2d2d;
+        border-radius: 0 0 5px 5px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        max-height: 200px;
+        overflow-y: auto;
+    }
+    .autocomplete-items div {
+        padding: 10px;
+        cursor: pointer;
+        border-bottom: 1px solid #444;
+        color: #e0e0e0;
+    }
+    .autocomplete-items div:hover {
+        background-color: #9c88cc;
+        color: #000;
+    }
+    .autocomplete-active {
+        background-color: #9c88cc !important;
+        color: #000 !important;
+    }
 </style>
 
 <div class="container mt-5">
@@ -84,19 +119,26 @@
                     </div>
                 }
 
-                <div class="mb-4">
+                <div class="mb-4 position-relative">
                     <input type="text" 
                            class="form-control form-control-lg" 
                            id="inputString" 
                            name="procedureName"
                            placeholder="BD_APP_DB.dbo.Procedure_name" 
+                           autocomplete="off"
                            required>
+                    <div id="autocomplete-list" class="autocomplete-items" style="display:none;"></div>
                 </div>
 
-                <div class="mb-4 form-check">
+                <div class="mb-2 form-check">
+                    <input type="checkbox" class="form-check-input" id="stopDynamicLoading">
+                    <label class="form-check-label" for="stopDynamicLoading">Stop dynamic loading</label>
+                </div>
+
+                <!-- <div class="mb-4 form-check">
                     <input type="checkbox" class="form-check-input" id="useDefaultParam" name="useDefaultParam">
                     <label class="form-check-label" for="useDefaultParam">Use default Parameter : user_id</label>
-                </div>
+                </div> -->
 
                 <div class="d-grid gap-3">
                     <button type="submit" class="btn btn-custom-purple btn-lg rounded-3">Generate Excel</button>
@@ -106,3 +148,101 @@
         </div>
     </div>
 </div>
+</div>
+
+@section Scripts {
+<script>
+    $(document).ready(function() {
+        var $input = $('#inputString');
+        var $list = $('#autocomplete-list');
+        var $stopLoading = $('#stopDynamicLoading');
+        var $form = $('form');
+
+        // Function to get recent procedures from localStorage
+        function getRecentProcedures() {
+            var recent = localStorage.getItem('recentProcedures');
+            return recent ? JSON.parse(recent) : [];
+        }
+
+        // Function to save procedure to localStorage
+        function saveRecentProcedure(name) {
+            if (!name) return;
+            var recent = getRecentProcedures();
+            // Remove if already exists to move it to top
+            recent = recent.filter(item => item.toLowerCase() !== name.toLowerCase());
+            // Add to beginning
+            recent.unshift(name);
+            // Keep only top 7
+            recent = recent.slice(0, 7);
+            localStorage.setItem('recentProcedures', JSON.stringify(recent));
+        }
+
+        // Function to render dropdown list
+        function renderList(items) {
+            $list.empty();
+            if (items && items.length > 0) {
+                $list.show();
+                $.each(items, function(index, item) {
+                    var $div = $('<div>').text(item);
+                    $div.on('click', function() {
+                        $input.val(item);
+                        $list.empty().hide();
+                    });
+                    $list.append($div);
+                });
+            } else {
+                $list.hide();
+            }
+        }
+
+        // Show recent procedures on focus
+        $input.on('focus', function() {
+            var val = $(this).val();
+            // Only show recent if input is empty
+            if (!val) {
+                var recent = getRecentProcedures();
+                if (recent.length > 0) {
+                    renderList(recent);
+                }
+            }
+        });
+
+        $input.on('input', function() {
+            var val = $(this).val();
+            
+            // Close any already open lists
+            $list.empty().hide();
+
+            if (!val) {
+                 // If cleared, show recent again?
+                 var recent = getRecentProcedures();
+                 if (recent.length > 0) {
+                    renderList(recent);
+                 }
+                 return false;
+            }
+
+            if ($stopLoading.is(':checked')) {
+                return false;
+            }
+
+            $.get('/Home/SearchProcedures', { term: val }, function(data) {
+                renderList(data);
+            });
+        });
+
+        // Save on submit
+        $form.on('submit', function() {
+            var val = $input.val();
+            saveRecentProcedure(val);
+        });
+
+        // Close the autocomplete list when clicking elsewhere
+        $(document).on('click', function(e) {
+             if (!$(e.target).closest('.position-relative').length) {
+                $list.empty().hide();
+            }
+        });
+    });
+</script>
+}
