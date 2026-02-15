@@ -148,7 +148,6 @@
         </div>
     </div>
 </div>
-</div>
 
 @section Scripts {
 <script>
@@ -160,8 +159,13 @@
 
         // Function to get recent procedures from localStorage
         function getRecentProcedures() {
-            var recent = localStorage.getItem('recentProcedures');
-            return recent ? JSON.parse(recent) : [];
+            try {
+                var recent = localStorage.getItem('recentProcedures');
+                return recent ? JSON.parse(recent) : [];
+            } catch (e) {
+                console.error("Error parsing recent procedures", e);
+                return [];
+            }
         }
 
         // Function to save procedure to localStorage
@@ -169,7 +173,7 @@
             if (!name) return;
             var recent = getRecentProcedures();
             // Remove if already exists to move it to top
-            recent = recent.filter(item => item.toLowerCase() !== name.toLowerCase());
+            recent = recent.filter(item => item && item.toLowerCase() !== name.toLowerCase());
             // Add to beginning
             recent.unshift(name);
             // Keep only top 7
@@ -221,7 +225,6 @@
                  }
                  return false;
             }
-
             if ($stopLoading.is(':checked')) {
                 return false;
             }
