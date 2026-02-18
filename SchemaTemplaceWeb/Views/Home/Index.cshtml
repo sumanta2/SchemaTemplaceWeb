@@ -184,7 +184,11 @@
         // Function to render dropdown list
         function renderList(items) {
             $list.empty();
-            if (items && items.length > 0) {
+                if ($stopLoading.is(':checked')) 
+                {
+                    $list.hide()
+                }
+                else if (items && items.length > 0) {
                 $list.show();
                 $.each(items, function(index, item) {
                     var $div = $('<div>').text(item);
