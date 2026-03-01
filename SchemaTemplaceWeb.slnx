@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="../SchemaTemplateLib/SchemaTemplateLib/SchemaTemplateLib.csproj" />
   <Project Path="SchemaTemplaceWeb/SchemaTemplaceWeb.csproj" />
 </Solution>

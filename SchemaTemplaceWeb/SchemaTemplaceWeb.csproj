@@ -8,6 +8,11 @@
 
   <ItemGroup>
     <PackageReference Include="FirstTry.SchemaTemplateLib" Version="0.0.0.31-beta" />
+    <PackageReference Include="ModelContextProtocol" Version="0.9.0-preview.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SchemaTemplateLib\SchemaTemplateLib\SchemaTemplateLib.csproj" />
   </ItemGroup>
 
 </Project>
