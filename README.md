@@ -57,3 +57,46 @@ services:
     ports:
       - "5000:5000"
 ```
+
+## MCP Transport (HTTPS instead of stdio)
+
+This project now supports MCP over HTTP/HTTPS using `ModelContextProtocol.AspNetCore`.
+
+- MCP HTTP endpoint is mapped at `/mcp` by default.
+- Development is configured for dual transport (`stdio` + HTTP) to help migration.
+- Non-development defaults to HTTP enabled and `stdio` disabled.
+
+### Configuration (`McpTransport`)
+
+```json
+"McpTransport": {
+  "EnableStdio": true,
+  "EnableHttp": true,
+  "Stateless": false,
+  "Path": "/mcp"
+}
+```
+
+### Environment variable equivalents
+
+- `McpTransport__EnableStdio`
+- `McpTransport__EnableHttp`
+- `McpTransport__Stateless`
+- `McpTransport__Path`
+
+Example (PowerShell):
+
+```powershell
+$env:McpTransport__EnableStdio="false"
+$env:McpTransport__EnableHttp="true"
+$env:McpTransport__Path="/mcp"
+dotnet run --project .\SchemaTemplaceWeb\SchemaTemplaceWeb.csproj
+```
+
+### Endpoint URL
+
+With current launch settings, HTTPS URL is:
+
+- `https://localhost:7058/mcp`
+
+Use this URL in MCP clients that support Streamable HTTP transport.
